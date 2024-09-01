@@ -9,6 +9,7 @@ console.debug(`Environment: ${env}`);
 
 const loadConfiguration = async () => {
   const { config } = await loadConfig({
+    cwd: 'node_modules/@chatxbt/xbt-sdk',
     configFile: 'config.yaml'
   });
   console.debug(`Configuration loaded: ${JSON.stringify(config)}`);
