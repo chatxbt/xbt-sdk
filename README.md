@@ -1,15 +1,15 @@
-# xbt-sdk
+# @chatxbt/xbt-sdk
 
 ## Overview
 
-`xbt-sdk` is a comprehensive SDK designed to interact with the XBT platform. It provides utilities for cryptographic operations, HTTP requests, and key-value storage management, among other features.
+`@chatxbt/xbt-sdk` is a comprehensive SDK designed to interact with the XBT platform. It provides utilities for cryptographic operations, HTTP requests, and key-value storage management, among other features.
 
 ## Installation
 
 To install the dependencies, run:
 
 ```bash
-npm install xbt-sdk
+npm install @chatxbt/xbt-sdk
 ```
 
 ## Usage
