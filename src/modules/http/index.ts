@@ -12,6 +12,7 @@ class Http {
      * @param {Record<string, string>} [defaultHeaders={}] - Default headers for the HTTP client.
      */
     constructor(baseURL?: string, defaultHeaders: Record<string, string> = {}) {
+        console.debug(`Creating HTTP client with baseURL: ${baseURL}, defaultHeaders: ${JSON.stringify(defaultHeaders)}`);
         this.request = ofetch.create({
             baseURL: baseURL || '',
             headers: defaultHeaders
@@ -28,11 +29,14 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     private async requestHandler(url: string, method: string, body?: object, options?: RequestInit) {
+        console.debug(`Handling request: url=${url}, method=${method}, body=${body ? JSON.stringify(body) : 'none'}, options=${options ? JSON.stringify(options) : 'none'}`);
         const config: RequestInit = { ...options, method };
         if (body) {
             config.body = JSON.stringify(body);
         }
-        return this.request(url, config);
+        const response = await this.request(url, config);
+        console.debug(`Response received: ${JSON.stringify(response)}`);
+        return response;
     }
 
     /**
@@ -42,6 +46,7 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     async get(url: string, options?: RequestInit) {
+        console.debug(`Performing GET request: url=${url}, options=${options ? JSON.stringify(options) : 'none'}`);
         return this.requestHandler(url, 'GET', undefined, options);
     }
 
@@ -53,6 +58,7 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     async post(url: string, body: object, options?: RequestInit) {
+        console.debug(`Performing POST request: url=${url}, body=${JSON.stringify(body)}, options=${options ? JSON.stringify(options) : 'none'}`);
         return this.requestHandler(url, 'POST', body, options);
     }
 
@@ -64,6 +70,7 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     async put(url: string, body: object, options?: RequestInit) {
+        console.debug(`Performing PUT request: url=${url}, body=${JSON.stringify(body)}, options=${options ? JSON.stringify(options) : 'none'}`);
         return this.requestHandler(url, 'PUT', body, options);
     }
 
@@ -74,6 +81,7 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     async delete(url: string, options?: RequestInit) {
+        console.debug(`Performing DELETE request: url=${url}, options=${options ? JSON.stringify(options) : 'none'}`);
         return this.requestHandler(url, 'DELETE', undefined, options);
     }
 
@@ -85,6 +93,7 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     async patch(url: string, body: object, options?: RequestInit) {
+        console.debug(`Performing PATCH request: url=${url}, body=${JSON.stringify(body)}, options=${options ? JSON.stringify(options) : 'none'}`);
         return this.requestHandler(url, 'PATCH', body, options);
     }
 
@@ -95,6 +104,7 @@ class Http {
      * @returns {Promise<Response>} The response from the request.
      */
     async head(url: string, options?: RequestInit) {
+        console.debug(`Performing HEAD request: url=${url}, options=${options ? JSON.stringify(options) : 'none'}`);
         return this.requestHandler(url, 'HEAD', undefined, options);
     }
 
@@ -105,6 +115,7 @@ class Http {
      * @returns {string} The Basic Authentication header.
      */
     generateBasicAuth(username: string, password: string): string {
+        console.debug(`Generating Basic Auth header for username: ${username}`);
         const credentials = `${username}:${password}`;
         return `Basic ${Buffer.from(credentials).toString('base64')}`;
     }
@@ -120,6 +131,7 @@ class Http {
      * @throws Will throw an error if the JSON-RPC response contains an error.
      */
     async jsonRPC(url: string, method: string, params: object | string, id?: string, options?: RequestInit) {
+        console.debug(`Performing JSON-RPC request: url=${url}, method=${method}, params=${JSON.stringify(params)}, id=${id}, options=${options ? JSON.stringify(options) : 'none'}`);
         const jsonRPCRequest = {
             jsonrpc: "2.0",
             method: method,
@@ -136,9 +148,11 @@ class Http {
         });
 
         if (response.error) {
+            console.error(`JSON-RPC error: ${response.error.message}`);
             throw new Error(response.error.message);
         }
 
+        console.debug(`JSON-RPC response received: ${JSON.stringify(response.result)}`);
         return response.result;
     }
 }

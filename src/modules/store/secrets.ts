@@ -14,6 +14,7 @@ class Secrets {
      * @param {string} XBT_SECRET_KEY - The secret key for authentication.
      */
     constructor(XBT_API_KEY: string, XBT_SECRET_KEY: string) {
+        console.debug("Creating Secrets instance");
         this.XBT_API_KEY = this.validateEnvVariable(XBT_API_KEY, 'XBT_API_KEY');
         this.XBT_SECRET_KEY = this.validateEnvVariable(XBT_SECRET_KEY, 'XBT_SECRET_KEY');
         this.storage = secretStorage;
@@ -28,6 +29,7 @@ class Secrets {
      * @throws Will throw an error if the environment variable is not provided.
      */
     private validateEnvVariable(value: string, name: string): string {
+        console.debug(`Validating environment variable: ${name}`);
         if (!value) {
             throw new Error(`${name} is required`);
         }
@@ -44,6 +46,7 @@ class Secrets {
      * @throws Will throw an error if the request fails.
      */
     private async fetchFromStorage(key: string, method: string, body?: unknown): Promise<Response> {
+        console.debug(`Fetching from storage: key=${key}, method=${method}, body=${body ? JSON.stringify(body) : 'none'}`);
         const headers = new Headers({
             'X-XBT-API-KEY': this.XBT_API_KEY,
             'X-XBT-SECRET-KEY': this.XBT_SECRET_KEY
@@ -60,6 +63,7 @@ class Secrets {
         });
 
         if (!response.ok) {
+            console.error(`Failed to ${method.toLowerCase()} item: ${response.statusText}`);
             throw new Error(`Failed to ${method.toLowerCase()} item: ${response.statusText}`);
         }
 
@@ -72,6 +76,7 @@ class Secrets {
      * @returns {Promise<T>} The storage item.
      */
     async get<T>(key: string): Promise<T> {
+        console.debug(`Getting item from storage: key=${key}`);
         const response = await this.fetchFromStorage(key, 'GET');
         return await response.json();
     }
@@ -82,6 +87,7 @@ class Secrets {
      * @returns {Promise<boolean>} True if the item exists, false otherwise.
      */
     async has(key: string): Promise<boolean> {
+        console.debug(`Checking if item exists in storage: key=${key}`);
         const response = await this.fetchFromStorage(key, 'HEAD');
         return response.ok;
     }
@@ -93,6 +99,7 @@ class Secrets {
      * @returns {Promise<void>}
      */
     async set(key: string, value: unknown): Promise<void> {
+        console.debug(`Setting item in storage: key=${key}, value=${JSON.stringify(value)}`);
         await this.fetchFromStorage(key, 'PUT', value);
     }
 
@@ -102,6 +109,7 @@ class Secrets {
      * @returns {Promise<void>}
      */
     async remove(key: string): Promise<void> {
+        console.debug(`Removing item from storage: key=${key}`);
         await this.fetchFromStorage(key, 'DELETE');
     }
 }
