@@ -1,3 +1,5 @@
+import "./src/config/logger";
+
 export { cryptoUtils } from "./src/modules/crypto/utils";
 
 export { default as Http } from "./src/modules/http";

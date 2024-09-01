@@ -1,16 +1,17 @@
 import { createStorage } from "unstorage";
 import httpDriver from "unstorage/drivers/http";
 import { loadConfig } from "c12";
+import logger from "./logger";
 
 const env = process.env.NODE_ENV || 'production';
-console.debug(`Environment: ${env}`);
+logger.debug(`Environment: ${env}`);
 
 const loadConfiguration = async () => {
   const { config } = await loadConfig({
     cwd: 'node_modules/@chatxbt/xbt-sdk',
     configFile: 'config.yaml'
   });
-  console.debug(`Configuration loaded: ${JSON.stringify(config)}`);
+  logger.debug(`Configuration loaded: ${JSON.stringify(config)}`);
   if (env === 'development') {
     const localBaseUrl = process.env.XBT_API_BASE_URL || 'http://localhost:3001/store';
     config.xbt.api.base_url = localBaseUrl;
@@ -21,7 +22,7 @@ const loadConfiguration = async () => {
 };
 
 const createHttpDriver = (config: { api_base_url: string, api_key: string, api_secret: string }, path: string) => {
-  console.debug(`Creating HTTP driver with base URL: ${config.api_base_url} and path: ${path}`);
+  logger.debug(`Creating HTTP driver with base URL: ${config.api_base_url} and path: ${path}`);
   return httpDriver({
     base: `${config.api_base_url}/${path}`,
     headers: {
@@ -32,7 +33,7 @@ const createHttpDriver = (config: { api_base_url: string, api_key: string, api_s
 };
 
 const createOverlayStorage = (config: { api_base_url: string, api_key: string, api_secret: string }, path: string) => {
-  console.debug(`Creating overlay storage with base URL: ${config.api_base_url} and path: ${path}`);
+  logger.debug(`Creating overlay storage with base URL: ${config.api_base_url} and path: ${path}`);
   return createStorage({
     driver: createHttpDriver(config, path)
   });

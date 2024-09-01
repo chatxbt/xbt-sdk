@@ -1,5 +1,6 @@
 import type { StorageValue } from "unstorage";
 import { kvStorage } from "../../config/store";
+import logger from "../../config/logger";
 
 /**
  * Class representing a key-value storage system.
@@ -11,7 +12,7 @@ class KV {
      * Create a KV instance.
      */
     constructor() {
-        console.debug("Creating KV instance");
+        logger.debug("Creating KV instance");
     }
 
     /**
@@ -20,7 +21,7 @@ class KV {
      * @returns {Promise<T>} The item from the storage system.
      */
     async getItem<T>(key: string): Promise<T> {
-        console.debug(`Getting item from storage: key=${key}`);
+        logger.debug(`Getting item from storage: key=${key}`);
         const item = await this.storage.getItem(key);
         if (item === null || item === undefined) {
             throw new Error(`Item with key ${key} not found`);
@@ -34,7 +35,7 @@ class KV {
      * @returns {Promise<boolean>} True if the item exists, false otherwise.
      */
     async hasItem(key: string): Promise<boolean> {
-        console.debug(`Checking if item exists in storage: key=${key}`);
+        logger.debug(`Checking if item exists in storage: key=${key}`);
         const item = await this.storage.hasItem(key);
         return item;
     }
@@ -46,9 +47,9 @@ class KV {
      * @returns {Promise<void>}
      */
     async setItem(key: string, value: StorageValue): Promise<void> {
-        console.debug(`Setting item in storage: key=${key}, value=${JSON.stringify(value)}`);
+        logger.debug(`Setting item in storage: key=${key}, value=${JSON.stringify(value)}`);
         const result = await this.storage.setItem(key, {value});
-        console.debug(`Set item in storage: key=${key}, result=${JSON.stringify(result)}`);
+        logger.debug(`Set item in storage: key=${key}, result=${JSON.stringify(result)}`);
     }
 
     /**
@@ -57,7 +58,7 @@ class KV {
      * @returns {Promise<void>}
      */
     async removeItem(key: string): Promise<void> {
-        console.debug(`Removing item from storage: key=${key}`);
+        logger.debug(`Removing item from storage: key=${key}`);
         await this.storage.removeItem(key);
     }
 }
