@@ -1,0 +1,25 @@
+{
+  "name": "xbt-sdk",
+  "version": "0.0.0",
+  "description": "XBT SDK",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "testcontainers": "^10.12.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.637.0",
+    "@dotenvx/dotenvx": "^1.11.5",
+    "@drpcorg/drpc-sdk": "^1.7.0",
+    "rc9": "^2.1.2",
+    "thirdweb": "^5.49.0",
+    "unstorage": "^1.10.2"
+  },
+  "scripts": {
+    "test": "bun test"
+  }
+}
