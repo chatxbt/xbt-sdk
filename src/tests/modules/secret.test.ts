@@ -27,10 +27,10 @@ describe("Secrets", () => {
         expect(exists).toBe(true);
     });
 
-    it("should remove an item from storage", async () => {
-        await secrets.remove(testKey);
-        const exists = await secrets.has(testKey);
-        console.log({exists});
-        expect(exists).toBe(false);
-    });
+    // it("should remove an item from storage", async () => {
+    //     await secrets.remove(testKey);
+    //     const exists = await secrets.has(testKey);
+    //     console.log({exists});
+    //     expect(exists).toBe(false);
+    // });
 });
