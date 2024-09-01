@@ -2,7 +2,7 @@
 
 ## Overview
 
-`xbt-sdk` is a comprehensive SDK designed to interact with the XBT platform. It provides utilities for cryptographic operations, HTTP requests, and key-value storage management, among other features.
+`xbt-sdk` is a comprehensive SDK designed to interact with ChatXBT Protocol and it's ecosystem to build implement and extend crypto-centric AI powered application. It provides utilities for cryptographic operations, HTTP requests, and key-value storage management, among other features.
 
 ## Installation
 
