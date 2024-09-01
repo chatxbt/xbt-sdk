@@ -1,7 +1,5 @@
 import { createStorage } from "unstorage";
-import overlay from "unstorage/drivers/overlay";
 import httpDriver from "unstorage/drivers/http";
-import lruCacheDriver from "unstorage/drivers/lru-cache";
 import { loadConfig } from "c12";
 
 const env = process.env.NODE_ENV || 'production';
@@ -13,43 +11,40 @@ const loadConfiguration = async () => {
     configFile: 'config.yaml'
   });
   console.debug(`Configuration loaded: ${JSON.stringify(config)}`);
+  if (env === 'development') {
+    const localBaseUrl = process.env.XBT_API_BASE_URL || 'http://localhost:3001/store';
+    config.xbt.api.base_url = localBaseUrl;
+    config.xbt.store.kv.api_base_url = localBaseUrl;
+    config.xbt.store.secret.api_base_url = localBaseUrl;
+  }
   return config;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const createHttpDriver = (config: any, path: string) => {
-  console.debug(`Creating HTTP driver for path: ${path}`);
+const createHttpDriver = (config: { api_base_url: string, api_key: string, api_secret: string }, path: string) => {
+  console.debug(`Creating HTTP driver with base URL: ${config.api_base_url} and path: ${path}`);
   return httpDriver({
-    base: `${config.xbt.store.api_base_url}/${path}`,
+    base: `${config.api_base_url}/${path}`,
     headers: {
-      "X-XBT-API-KEY": config.xbt.store.api_key,
-      "X-XBT-SECRET-KEY": config.xbt.store.api_secret
+      "X-XBT-API-KEY": config.api_key,
+      "X-XBT-SECRET-KEY": config.api_secret
     }
   });
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const createOverlayStorage = (config: any, path: string) => {
-  console.debug(`Creating overlay storage for path: ${path}`);
+const createOverlayStorage = (config: { api_base_url: string, api_key: string, api_secret: string }, path: string) => {
+  console.debug(`Creating overlay storage with base URL: ${config.api_base_url} and path: ${path}`);
   return createStorage({
-    driver: overlay({
-      layers: [
-        lruCacheDriver({}),
-        createHttpDriver(config, path)
-      ],
-    }),
+    driver: createHttpDriver(config, path)
   });
 };
 
-const initializeStorages = async () => {
+const initializeStorage = async (type: 'kv' | 'secret') => {
   const config = await loadConfiguration();
-  const kvStorage = createOverlayStorage(config, config.xbt.store.kv.path);
-  console.debug(`KV Storage created: ${kvStorage}`);
-  const secretStorage = createOverlayStorage(config, config.xbt.store.secret.path);
-  console.debug(`Secret Storage created: ${secretStorage}`);
-  return { kvStorage, secretStorage };
+  const storageConfig = config.xbt.store[type];
+  return createOverlayStorage(storageConfig, type);
 };
 
-const { kvStorage, secretStorage } = await initializeStorages();
+const secretStorage = await initializeStorage('secret');
+const kvStorage = await initializeStorage('kv');
 
 export { kvStorage, secretStorage };

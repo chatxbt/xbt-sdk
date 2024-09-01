@@ -5,7 +5,7 @@ import { secretStorage } from "../../config/store";
  * Class representing a secrets storage system.
  */
 class Secrets {
-    private storage;
+    private storage = secretStorage;
     private XBT_API_KEY: string;
     private XBT_SECRET_KEY: string;
 
@@ -18,7 +18,6 @@ class Secrets {
         console.debug("Creating Secrets instance");
         this.XBT_API_KEY = this.validateEnvVariable(XBT_API_KEY, 'XBT_API_KEY');
         this.XBT_SECRET_KEY = this.validateEnvVariable(XBT_SECRET_KEY, 'XBT_SECRET_KEY');
-        this.storage = secretStorage;
     }
 
     /**
@@ -45,7 +44,7 @@ class Secrets {
     async get<T>(key: string): Promise<T> {
         console.debug(`Getting item from storage: key=${key}`);
         const item = await this.storage.getItem(key);
-        if (item === null) {
+        if (item === null || item === undefined) {
             throw new Error(`Item with key ${key} not found`);
         }
         return item as T;
@@ -58,8 +57,8 @@ class Secrets {
      */
     async has(key: string): Promise<boolean> {
         console.debug(`Checking if item exists in storage: key=${key}`);
-        const item = await this.storage.getItem(key);
-        return item !== null;
+        const item = await this.storage.hasItem(key);
+        return item;
     }
 
     /**
@@ -70,7 +69,8 @@ class Secrets {
      */
     async set(key: string, value: StorageValue): Promise<void> {
         console.debug(`Setting item in storage: key=${key}, value=${JSON.stringify(value)}`);
-        await this.storage.setItem(key, value);
+        const result = await this.storage.setItem(key, {value});
+        console.debug(`Set item in storage: key=${key}, result=${JSON.stringify(result)}`);
     }
 
     /**
