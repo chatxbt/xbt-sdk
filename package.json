@@ -1,5 +1,5 @@
 {
-  "name": "@chatxbt-protocol/xbt-sdk",
+  "name": "@chatxbt/xbt-sdk",
   "version": "0.5.0",
   "description": "XBT SDK",
   "module": "index.ts",
