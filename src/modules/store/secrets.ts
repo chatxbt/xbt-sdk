@@ -71,7 +71,7 @@ class Secrets {
      * @param {string} key - The key for the storage item.
      * @returns {Promise<T>} The storage item.
      */
-    async getItem<T>(key: string): Promise<T> {
+    async get<T>(key: string): Promise<T> {
         const response = await this.fetchFromStorage(key, 'GET');
         return await response.json();
     }
@@ -81,7 +81,7 @@ class Secrets {
      * @param {string} key - The key for the storage item.
      * @returns {Promise<boolean>} True if the item exists, false otherwise.
      */
-    async hasItem(key: string): Promise<boolean> {
+    async has(key: string): Promise<boolean> {
         const response = await this.fetchFromStorage(key, 'HEAD');
         return response.ok;
     }
@@ -92,7 +92,7 @@ class Secrets {
      * @param {unknown} value - The value to set.
      * @returns {Promise<void>}
      */
-    async setItem(key: string, value: unknown): Promise<void> {
+    async set(key: string, value: unknown): Promise<void> {
         await this.fetchFromStorage(key, 'PUT', value);
     }
 
@@ -101,7 +101,7 @@ class Secrets {
      * @param {string} key - The key for the storage item.
      * @returns {Promise<void>}
      */
-    async removeItem(key: string): Promise<void> {
+    async remove(key: string): Promise<void> {
         await this.fetchFromStorage(key, 'DELETE');
     }
 }
