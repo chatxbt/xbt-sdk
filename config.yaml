@@ -1,0 +1,15 @@
+xbt:
+  api:
+    base_url: &api_base_url "${NODE_ENV == 'development' ? 'http://localhost:3000' : 'https://api.chatxbt.com'}"
+    key: &api_key "apiKey"
+    secret: &api_secret "apiSecret"
+
+  store:
+    api_base_url: *api_base_url
+    api_key: *api_key
+    api_secret: *api_secret
+    
+    kv:
+      path: "kv"
+    secret:
+      path: "secret"

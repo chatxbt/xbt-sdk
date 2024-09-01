@@ -1,3 +1,4 @@
+import type { StorageValue } from "unstorage";
 import { kvStorage } from "../../config/store";
 
 /**
@@ -37,48 +38,17 @@ class KV {
     }
 
     /**
-     * Fetch data from the storage system.
-     * @private
-     * @param {string} key - The key of the item to fetch.
-     * @param {string} method - The HTTP method to use.
-     * @param {unknown} [body] - The request body.
-     * @returns {Promise<Response>} The response from the storage system.
-     * @throws Will throw an error if the request fails.
-     */
-    private async fetchFromStorage(key: string, method: string, body?: unknown): Promise<Response> {
-        console.debug(`Fetching from storage: key=${key}, method=${method}, body=${body ? JSON.stringify(body) : 'none'}`);
-        const headers = new Headers({
-            'X-XBT-API-KEY': this.XBT_API_KEY,
-            'X-XBT-SECRET-KEY': this.XBT_SECRET_KEY
-        });
-
-        if (body) {
-            headers.append('Content-Type', 'application/json');
-        }
-
-        const response = await fetch(`${this.storage}${key}`, {
-            method,
-            headers,
-            body: body ? JSON.stringify(body) : undefined
-        });
-
-        if (!response.ok) {
-            console.error(`Failed to ${method.toLowerCase()} item: ${response.statusText}`);
-            throw new Error(`Failed to ${method.toLowerCase()} item: ${response.statusText}`);
-        }
-
-        return response;
-    }
-
-    /**
      * Get an item from the storage system.
      * @param {string} key - The key of the item to get.
      * @returns {Promise<T>} The item from the storage system.
      */
     async getItem<T>(key: string): Promise<T> {
         console.debug(`Getting item from storage: key=${key}`);
-        const response = await this.fetchFromStorage(key, 'GET');
-        return await response.json();
+        const item = await this.storage.getItem(key);
+        if (item === null) {
+            throw new Error(`Item with key ${key} not found`);
+        }
+        return item as T;
     }
 
     /**
@@ -88,8 +58,8 @@ class KV {
      */
     async hasItem(key: string): Promise<boolean> {
         console.debug(`Checking if item exists in storage: key=${key}`);
-        const response = await this.fetchFromStorage(key, 'HEAD');
-        return response.ok;
+        const item = await this.storage.getItem(key);
+        return item !== null;
     }
 
     /**
@@ -98,9 +68,9 @@ class KV {
      * @param {unknown} value - The value of the item to set.
      * @returns {Promise<void>}
      */
-    async setItem(key: string, value: unknown): Promise<void> {
+    async setItem(key: string, value: StorageValue): Promise<void> {
         console.debug(`Setting item in storage: key=${key}, value=${JSON.stringify(value)}`);
-        await this.fetchFromStorage(key, 'PUT', value);
+        await this.storage.setItem(key, value);
     }
 
     /**
@@ -110,7 +80,7 @@ class KV {
      */
     async removeItem(key: string): Promise<void> {
         console.debug(`Removing item from storage: key=${key}`);
-        await this.fetchFromStorage(key, 'DELETE');
+        await this.storage.removeItem(key);
     }
 }
 
