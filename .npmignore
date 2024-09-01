@@ -40,3 +40,5 @@ yarn.lock
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
+
+.npmrc
