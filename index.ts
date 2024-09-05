@@ -1,4 +1,4 @@
-import "./src/config/logger";
+import "./src/libs/logger";
 
 import { cryptoUtils } from "./src/modules/crypto/utils";
 import Http from "./src/modules/http";

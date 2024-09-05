@@ -1,6 +1,6 @@
 import type { StorageValue } from "unstorage";
-import { kvStorage } from "../../config/store";
-import logger from "../../config/logger";
+import { kvStorage } from "../../libs/store";
+import logger from "../../libs/logger";
 
 /**
  * Class representing a key-value storage system.

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "bun:test";
 import Secrets from "../../modules/store/secrets";
-import logger from "../../config/logger";
+import logger from "../../libs/logger";
 
 describe("Secrets", () => {
     let secrets: Secrets;

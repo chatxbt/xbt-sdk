@@ -1,6 +1,6 @@
 import type { StorageValue } from "unstorage";
-import { secretStorage } from "../../config/store";
-import logger from "../../config/logger";
+import { secretStorage } from "../../libs/store";
+import logger from "../../libs/logger";
 
 /**
  * Class representing a secrets storage system.

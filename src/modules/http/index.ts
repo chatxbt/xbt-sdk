@@ -1,5 +1,5 @@
 import { ofetch } from "ofetch";
-import logger from "../../config/logger";
+import logger from "../../libs/logger";
 
 /**
  * Class representing an HTTP client.

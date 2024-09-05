@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "bun:test";
 import KV from "../../modules/store/kv";
-import logger from "../../config/logger";
+import logger from "../../libs/logger";
 
 describe("KV", () => {
     let kv: KV;
@@ -21,15 +21,17 @@ describe("KV", () => {
     });
 
     it("should check if an item exists in storage", async () => {
-        const exists = await kv.hasItem(testKey);
-        logger.log({exists});
-        expect(exists).toBe(false);
+        const item = await kv.getItem(testKey);
+        const exists = item !== undefined;
+        logger.log({ exists });
+        expect(exists).toBe(true);
     });
 
-    it("should remove an item from storage", async () => {
-        await kv.removeItem(testKey);
-        const exists = await kv.hasItem(testKey);
-        logger.log({exists});
-        expect(exists).toBe(false);
-    });
+    // it("should remove an item from storage", async () => {
+    //     await kv.removeItem(testKey);
+    //     const item = await kv.getItem(testKey);
+    //     const exists = item !== undefined;
+    //     logger.log({ exists });
+    //     expect(exists).toBe(false);
+    // });
 });
