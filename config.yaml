@@ -1,6 +1,6 @@
 xbt:
   api:
-    base_url: &api_base_url "https://api.chatxbt.com/store"
+    base_url: &api_base_url "https://rpc.chatxbt.com/store"
     key: &api_key "apiKey"
     secret: &api_secret "apiSecret"
 
