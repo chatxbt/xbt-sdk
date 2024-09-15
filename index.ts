@@ -1,15 +1,17 @@
 import "./src/libs/logger";
 
-import { cryptoUtils } from "./src/modules/crypto/utils";
 import Http from "./src/modules/http";
 import KV from "./src/modules/store/kv";
+import { DataUtils } from "./src/modules/utils";
 import Secrets from "./src/modules/store/secrets";
+import { cryptoUtils as CryptoUtils } from "./src/modules/crypto/utils";
 
-export { cryptoUtils, Http, KV, Secrets };
+export { CryptoUtils, Http, KV, Secrets, DataUtils };
 
 export default {
-  cryptoUtils,
-  Http,
   KV,
-  Secrets
+  Http,
+  Secrets,
+  DataUtils,
+  CryptoUtils,
 };
